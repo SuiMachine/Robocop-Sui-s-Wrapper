@@ -194,8 +194,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		bForceWindowedMode = GetPrivateProfileInt("MAIN", "ForceWindowedMode", 0, path) != 0;
 
 		//Robocop Variables
-		iWidth = GetPrivateProfileInt("MAIN", "Width", 1280, path);
-		iHeight = GetPrivateProfileInt("MAIN", "Height", 960, path);
+		iWidth = GetPrivateProfileInt("MAIN", "Width", 1280, path) - 16;
+		iHeight = GetPrivateProfileInt("MAIN", "Height", 960, path) - 38;
 		iPositionX = GetPrivateProfileInt("MAIN", "PositionX", 0, path);
 		iPositionY = GetPrivateProfileInt("MAIN", "PositionY", 0, path);
 		fFogMultiplier = GetPrivateProfileFloat("MAIN", "FogEndMultiplier", 1, path);
