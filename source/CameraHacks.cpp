@@ -22,10 +22,10 @@ void __declspec(naked) cameraDetour()
 	__asm
 	{
 		fld [ebx + 0x24]
-		fmul DS:[fFOVMultiplier]
+		fmul [fFOVMultiplier]
 		fstp [ebx + 0x24]
-		fld DS:[fAspectratio]
-		fstp[ebx + 0x20]
+		fld [fAspectratio]
+		fstp [ebx + 0x20]
 		mov eax, ebx
 		push esi
 		push edi

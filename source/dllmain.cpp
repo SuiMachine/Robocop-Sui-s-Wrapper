@@ -194,8 +194,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		bForceWindowedMode = GetPrivateProfileInt("MAIN", "ForceWindowedMode", 0, path) != 0;
 
 		//Robocop Variables
-		iWidth = GetPrivateProfileInt("MAIN", "Width", 1280, path) - 16;
-		iHeight = GetPrivateProfileInt("MAIN", "Height", 960, path) - 38;
+		iWidth = GetPrivateProfileInt("MAIN", "Width", 1280, path);
+		iHeight = GetPrivateProfileInt("MAIN", "Height", 960, path);
 		iPositionX = GetPrivateProfileInt("MAIN", "PositionX", 0, path);
 		iPositionY = GetPrivateProfileInt("MAIN", "PositionY", 0, path);
 		fFogMultiplier = GetPrivateProfileFloat("MAIN", "FogEndMultiplier", 1, path);
@@ -209,8 +209,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		UnprotectModule(baseModule);
 
 		//Window's Width x Height
-		*(int*)((DWORD)baseModule + 0x2E12E) = iWidth;
-		*(int*)((DWORD)baseModule + 0x2E141) = iHeight;
+		*(int*)((DWORD)baseModule + 0x2E12E) = iWidth -16;
+		*(int*)((DWORD)baseModule + 0x2E141) = iHeight - 38;
 
 		//X and Y of Window and Style override
 		*(int*)((DWORD)baseModule + 0x302B9) = iPositionX;
@@ -218,7 +218,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		*(DWORD*)((DWORD)baseModule + 0x302BE) = dwStyleOverride;
 
 		float fovMultiplier = GetPrivateProfileFloat("MAIN", "FovMultiplier", 1, path);
-		CameraHacks(baseModule, 1.0f, iWidth * 1.0f / iHeight);
+		CameraHacks(baseModule, fovMultiplier, iWidth * 1.0f / iHeight);
 
 		printf("Override window resolution: %d x %d\nwith a start positionposition of x=%d, y=%d and style = 0x%04X\n", iWidth, iHeight, iPositionX, iPositionY, dwStyleOverride);
 
