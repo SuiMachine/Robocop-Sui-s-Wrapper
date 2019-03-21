@@ -90,12 +90,3 @@ static bool Hook(DWORD targetToHook, void * ourFunction, int overrideLenght)
 	VirtualProtect((void*)targetToHook, overrideLenght, curProtectionFlag, &temp);
 	return true;
 }
-
-static float GetPrivateProfileFloat(LPCSTR lpAppName, LPCSTR lpKeyName, float nDefault, LPCSTR lpFileName)
-{
-	char parsedFloat[64];
-	snprintf(parsedFloat, sizeof(parsedFloat), "%f", nDefault);
-	char returnedString[64];
-	GetPrivateProfileString(lpAppName, lpKeyName, parsedFloat, returnedString, 64, lpFileName);
-	return (float)atof(returnedString);
-}

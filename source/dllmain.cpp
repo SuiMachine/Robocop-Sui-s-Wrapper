@@ -5,6 +5,7 @@
 #include "Direct3D8Wrapper.h"
 #include "Direct3DDevice8Wrapper.h"
 #include "CameraHacks.h"
+#include "inireader/IniReader.h"
 
 //Sources used from:
 //https://bitbucket.org/andrewcooper/windower_open
@@ -186,20 +187,21 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         GetModuleFileNameA(hm, path, sizeof(path));
         *strrchr(path, '\\') = '\0';
         strcat_s(path, "\\d3d8.ini");
+		CIniReader configReader(path);
 
 		//Original variables
-        bForceWindowedMode = GetPrivateProfileInt("MAIN", "ForceWindowedMode", 0, path) != 0;
-        bDirect3D8DisableMaximizedWindowedModeShim = GetPrivateProfileInt("MAIN", "Direct3D8DisableMaximizedWindowedModeShim", 0, path) != 0;
-        fFPSLimit = static_cast<float>(GetPrivateProfileInt("MAIN", "FPSLimit", 0, path));
-		bForceWindowedMode = GetPrivateProfileInt("MAIN", "ForceWindowedMode", 0, path) != 0;
+        bForceWindowedMode = configReader.ReadInteger("MAIN", "ForceWindowedMode", 0) != 0;
+        bDirect3D8DisableMaximizedWindowedModeShim = configReader.ReadInteger("MAIN", "Direct3D8DisableMaximizedWindowedModeShim", 0) != 0;
+        fFPSLimit = static_cast<float>(configReader.ReadInteger("MAIN", "FPSLimit", 0));
+		bForceWindowedMode = configReader.ReadInteger("MAIN", "ForceWindowedMode", 0) != 0;
 
 		//Robocop Variables
-		iWidth = GetPrivateProfileInt("MAIN", "Width", 1280, path);
-		iHeight = GetPrivateProfileInt("MAIN", "Height", 960, path);
-		iPositionX = GetPrivateProfileInt("MAIN", "PositionX", 0, path);
-		iPositionY = GetPrivateProfileInt("MAIN", "PositionY", 0, path);
-		fFogMultiplier = GetPrivateProfileFloat("MAIN", "FogEndMultiplier", 1, path);
-		iAnisotropicLevel = GetPrivateProfileInt("MAIN", "AnisotropicLevel", 0, path);
+		iWidth = configReader.ReadInteger("MAIN", "Width", 1280);
+		iHeight = configReader.ReadInteger("MAIN", "Height", 960);
+		iPositionX = configReader.ReadInteger("MAIN", "PositionX", 0);
+		iPositionY = configReader.ReadInteger("MAIN", "PositionY", 0);
+		fFogMultiplier = configReader.ReadFloat("MAIN", "FogEndMultiplier", 1);
+		iAnisotropicLevel = configReader.ReadInteger("MAIN", "AnisotropicLevel", 0);
 
 
         if (fFPSLimit)
@@ -217,7 +219,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 		*(int*)((DWORD)baseModule + 0x302B4) = iPositionY;
 		*(DWORD*)((DWORD)baseModule + 0x302BE) = dwStyleOverride;
 
-		float fovMultiplier = GetPrivateProfileFloat("MAIN", "FovMultiplier", 1, path);
+		float fovMultiplier = configReader.ReadFloat("MAIN", "FovMultiplier", 1);
 		CameraHacks(baseModule, fovMultiplier, iWidth * 1.0f / iHeight);
 
 		printf("Override window resolution: %d x %d\nwith a start positionposition of x=%d, y=%d and style = 0x%04X\n", iWidth, iHeight, iPositionX, iPositionY, dwStyleOverride);
